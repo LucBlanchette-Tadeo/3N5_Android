@@ -11,18 +11,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.albumsfavoris.ui.theme.AlbumsFavorisTheme
+import androidx.compose.runtime.remember
 
 class MainActivity : ComponentActivity() {
-    private val albums = listOf(
+    private val albums = mutableStateListOf(
         Album(0, "Illmatic", "Nas"),
         Album(1, "The Chronic", "Dr. Dre"),
         Album(2, "To Pimp a Butterfly", "Kendrick Lamar"),
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
                             val albumId = albumIdString?.toIntOrNull()
                             val album = albums.find { it.id == albumId }
                             if (album != null) {
-                                AlbumDetail(album, navController)
+                                AlbumDetail(album, albums, navController)
                             } else {
                                 Text("Album non trouvé", modifier = Modifier.padding(16.dp))
                             }
@@ -86,15 +89,24 @@ fun AlbumListe(albums: List<Album>, navController: androidx.navigation.NavHostCo
 }
 
 @Composable
-fun AlbumDetail(album: Album, navController: androidx.navigation.NavHostController) {
+fun AlbumDetail(album: Album, albums: MutableList<Album>, navController: androidx.navigation.NavHostController) {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)) {
         Text(text = album.name)
         Text(text = "Artist: ${album.artistName}")
 
-        // Un bouton simple pour revenir à la liste
-        androidx.compose.material3.Button(onClick = { navController.navigateUp() }) {
+        Button(
+            onClick = {
+                albums.remove(album)
+                navController.navigateUp()
+            },
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Supprimer")
+        }
+
+        Button(onClick = { navController.navigateUp() }) {
             Text("Retour")
         }
     }
