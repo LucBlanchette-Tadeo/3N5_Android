@@ -116,6 +116,6 @@ fun AlbumDetail(album: Album, albums: MutableList<Album>, navController: android
 fun AlbumItem(album: Album, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(8.dp)) {
         Text(text = album.name)
-        Text(text = "Artist: ${album.artistName}")
+        Text(text = album.artistName)
     }
 }
